@@ -8,7 +8,7 @@ import { getToken } from '../../helpers/getToken'
 
 function Sidebar() {
   return (
-    <div className="rounded-xl py-10 px-3 flex flex-col h-[90vh] w-[20vw] bg-orange-300 gap-10">
+    <div className="rounded-xl  flex flex-col max-md:hidden   h-[90vh] w-[20vw] bg-orange-300 gap-10">
       <h1 className="text-3xl px-5 text-white">
         <img
           src="https://cdn.logojoy.com/wp-content/uploads/2018/05/30164225/572.png"

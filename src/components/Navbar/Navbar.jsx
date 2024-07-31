@@ -20,12 +20,14 @@ function Navbar() {
         {!user ? (
           <>
             <Link
+            to={'/login'}
               className="bg-zinc-800
               hover:bg-black  transition ease-out px-6 py-1 rounded text-white font-medium shadow"
             >
               Login
             </Link>
             <Link
+            to={'/signup'}
               className="bg-zinc-800
             hover:bg-black  transition ease-out px-4  shadow py-1 text-white rounded"
             >
