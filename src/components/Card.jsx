@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { getToken } from "../helpers/getToken";
+import { BlogContext } from "../Pages/Home/Home";
 
-function Card({ src, title,  desc, _id  , fromChild}) {
-  const [ isDel , setDel ] = useState(false);
-
+function Card({ src, title,  desc, _id }) {
+  const { setDel } = useContext(BlogContext);
   const handleDelete = async () =>{
     const token = getToken();
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/blogs/delete/${_id}`,{
@@ -12,14 +12,14 @@ function Card({ src, title,  desc, _id  , fromChild}) {
       headers:{Authorization: `Bearer ${token}`}
     })
     const response = await res.json();
-    console.log(response)
     if(response.success){
-      setDel(true);
-      fromChild(isDel)
+      console.log(response)
+      setDel(true)
     } 
   }
 
   return (
+
     <div className=" flex  gap-4  py-3 items-center ">
       <div className="">
         <img className="w-full h-full" src={src} />

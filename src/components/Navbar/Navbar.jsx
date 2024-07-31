@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 
 function Navbar() {
-  const { user } = useAuth();
+  const { user , handleLogout } = useAuth();
   return (
     <nav className="  relative  flex items-center justify-between px-5 ">
       <div>
@@ -37,7 +37,9 @@ function Navbar() {
             <Link to={"/dashboard"} className="hover:underline py-1 px-3">
               Me
             </Link>
-            <button className=" hover:text-white px-5 py-1 border font-medium hover:bg-black shadow border-black text-black transition ease-linear rounded ">
+            <button 
+            onClick={handleLogout}
+            className=" hover:text-white px-5 py-1 border font-medium hover:bg-black shadow border-black text-black transition ease-linear rounded ">
               Logout
             </button>
           </>

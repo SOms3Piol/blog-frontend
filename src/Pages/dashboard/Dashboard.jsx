@@ -80,7 +80,6 @@ function Layout() {
               title={blog.title}
               desc={blog.desc}
               _id={blog._id}
-              fromChild={setIsDel}
             />
           )) : (
             <div className=" flex flex-col justify-center px-3  gap-9 ">

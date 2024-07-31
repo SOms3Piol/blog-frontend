@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaInfo } from "react-icons/fa";
 import { MdArrowOutward } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { BlogContext } from "../../Pages/Home/Home";
 
-function Slider({ post }) {
+function Slider({ post , className}) {
   return (
     <>
-      <div className="flex flex-col gap-6 transition ease-in-out overflow-hidden">
+      <div className={`flex flex-col gap-6 transition ease-in-out ${className}`}>
         <div className="aspect-video flex justify-center ">
           <img src={post.img} alt="" />
         </div>
@@ -26,25 +27,26 @@ function Slider({ post }) {
   );
 }
 
-function RecentPosts({ posts }) {
+function RecentPosts() {
+  const {blogs} = useContext(BlogContext);
   return (
     <>
-      {posts && posts.length > 0 ? (
+      {blogs && blogs.length > 0 ? (
         <div className="">
           <h1 className="text-2xl font-medium px-12">Recent Blog Posts</h1>
-          <div className="px-12 grid grid-cols-2 py-10 gap-3">
-            <Slider post={posts[0]} /> {/* Pass the entire first post */}
-            <div className="h-full flex flex-col gap-3">
+          <div className="px-12 grid grid-cols-2 py-10 gap-3 ">
+            <Slider post={blogs[0]} className='max-md:hidden' /> 
+            <div className="h-full flex md:flex-col gap-3 max-md:grid sm:max-md:grid-cols-2 max-sm:grid-cols-1">
               {
-                posts.length > 3 ? 
-                posts.slice(0,3).map(item =>(
+                blogs.length > 3 ? 
+                blogs.slice(0,3).map(item =>(
                   <Item
                     key={item._id}
                     src={item.src}
                     title={item.title}
                     desc={item.desc}
                   />
-                )) : posts.map(item=>{
+                )) : blogs.map(item=>{
                  return <Item
                     key={item._id}
                     src={item.src}

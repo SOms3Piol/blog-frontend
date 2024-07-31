@@ -9,7 +9,7 @@ import Blog from "./Pages/Blog/Blog";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 import AuthProvider from "./context/authContext.jsx";
-
+import _404 from "./404.jsx";
 const AuthLayout = () => (
   <AuthProvider>
     <Outlet />
@@ -59,7 +59,12 @@ const router = createBrowserRouter([
         ],
       },
     ],
+    
   },
+  {
+    path: "*",
+    element: <_404/>
+  }
 ]);
 
 export { router };
