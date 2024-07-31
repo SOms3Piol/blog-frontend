@@ -1,11 +1,19 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { setToken } from "../helpers/setToken";
 import { useNavigate } from "react-router-dom";
 export const AuthContext = createContext({});
 
+
+
 function AuthProvider({ children }) {
+
   const navigation = useNavigate();
   const [user, setUser] = useState("");
+
+  useEffect(()=>{
+    setUser(localStorage.getItem('username'));
+  },[])
+
   const handleSignUp = async (formData) => {
     if (formData.password != formData.Cpassword) {
       return "Passord Doesn't matched!";
@@ -26,11 +34,12 @@ function AuthProvider({ children }) {
       },
     );
     const data = await response.json();
-    console.log(data);
     if (data.success) {
       setToken(data.data.token);
       localStorage.setItem("email", data.data.email);
       navigation("/verify");
+    }else{
+      return data.message;
     }
   };
   const handleLogin = async (formData) => {
@@ -44,10 +53,13 @@ function AuthProvider({ children }) {
         body: JSON.stringify(formData),
       },
     );
-    const { data } = await response.json();
-    if (data.success && data.isVerified) {
-      setToken(data.token);
-      setUser(data.username);
+    
+    const data  = await response.json();
+    console.log(data);
+    if (data.success ){
+      setUser(data.data.username);
+      setToken(data.data.token)
+      localStorage.setItem('username' , data.data.username);
       navigation("/dashboard");
     } else {
       return data.message;
@@ -56,6 +68,9 @@ function AuthProvider({ children }) {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    navigation('/login');
   };
 
   return (

@@ -7,14 +7,21 @@ function ProtectedRoute() {
   const navigation = useNavigate();
   useEffect(() => {
     const token = getToken();
-    if (!token) {
-      navigation("/login");
-    }
+    
     const verify = async () => {
+       if(!token) {
+        return setValid(false);
+       }
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/isValid?token=${token}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/isValid`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
       const data = await res.json();
+
       if (data.success) {
         setValid(true);
       } else {
@@ -25,10 +32,12 @@ function ProtectedRoute() {
   }, []);
 
   if (!valid) {
-    <Navigate to={"/login"} />;
+     navigation('/login')
+  }else{
+    return <Outlet />;
   }
 
-  return <Outlet />;
+  
 }
 
 export { ProtectedRoute };

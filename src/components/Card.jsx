@@ -1,20 +1,43 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { getToken } from "../helpers/getToken";
 
-function Card({ src, title, _id }) {
+function Card({ src, title,  desc, _id  , fromChild}) {
+  const [ isDel , setDel ] = useState(false);
+
+  const handleDelete = async () =>{
+    const token = getToken();
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/blogs/delete/${_id}`,{
+      method:"DELETE",
+      headers:{Authorization: `Bearer ${token}`}
+    })
+    const response = await res.json();
+    console.log(response)
+    if(response.success){
+      setDel(true);
+      fromChild(isDel)
+    } 
+  }
+
   return (
-    <div className=" flex flex-col gap-4  w-[433px] ">
-      <div className="w-[433px] h-[242px]">
+    <div className=" flex  gap-4  py-3 items-center ">
+      <div className="">
         <img className="w-full h-full" src={src} />
       </div>
+      <div>
       <Link to={`/blog/${_id}`}>
-        <p></p>
         <h1 className="text-xl font-medium letter-wide hover:underline ">
           {title}
         </h1>
+        <p className="w-[500px] h-[35px] whitespace-nowrap text-ellipsis overflow-hidden">{desc}</p>
       </Link>
       <div className="flex gap-5">
-        <Link className="bg-green-600 text-white py-1 px-7 rounded">Edit</Link>
-        <Link className="bg-red-600 text-white py-1 px-5 rounded">Delete</Link>
+        <Link to={`/edit/${_id}`} className="bg-green-600 text-white py-1 px-7 rounded">Edit</Link>
+        <button 
+        className="bg-red-600 text-white py-1 px-5 rounded"
+        onClick={handleDelete}
+        >Delete</button>
+      </div>
       </div>
     </div>
   );

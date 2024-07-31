@@ -1,8 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState , useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import QuillEditor from "react-quill";
 import { getToken } from "../../helpers/getToken.js";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom";
 
 function Create() {
   const [desc, setDesc] = useState("");
@@ -52,14 +52,19 @@ function Create() {
     [],
   );
 
-  function handleChange(e) {
-    setImg(e.target.files[0]);
-    setImgUrl(URL.createObjectURL(e.target.files[0]));
-  }
+  const handleChange = (e) => {
+    const file = e.target.files[0];
+    setImg(file);
+    setImgUrl(URL.createObjectURL(file));
+  };
 
   const handleSubmit = async () => {
     const formData = new FormData();
-    formData.append("img", img);
+    if(!img || !title || !desc || !value){
+      return;
+    }
+    console.log(img)
+    formData.append("file", img);
     formData.append("title", title);
     formData.append("desc", desc);
     formData.append("blog", value);
@@ -68,26 +73,43 @@ function Create() {
       `${import.meta.env.VITE_BACKEND_URL}/api/blogs/create`,
       {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          Authorization: `Bearer ${token}`
+       },
         body: formData,
       },
     );
     const data = await response.json();
-    console.log(data);
     if (data.success) {
-      navigate(`/blog/${data._id}`);
+      navigate(`/blog/${data.data._id}`);
     }
   };
+
   return (
+    <>
+    <div className='relative  py-3 px-3 flex justify-end gap-4'>
+      <button
+        onClick={handleSubmit}
+        type="submit"
+        className=" bg-zinc-700 hover:bg-black transition ease-in px-5 py-1 text-white font-medium capitalize rounded"
+      >
+        Submit
+      </button>
+      <Link
+        className="border text-black border-black hover:bg-black transition ease-in px-5 py-1 hover:text-white font-medium capitalize rounded"
+        to={'/dashboard'}
+      >
+        Cancel
+      </Link>
+    </div>
     <form
-      onSubmit={handleSubmit}
-      className="max-w-[900px] w-full py-3 mx-auto  h-full flex flex-col gap-3 "
+      className="max-w-[900px] w-full py-3 mx-auto h-full flex flex-col gap-3 relative"
     >
-      <div className="aspect-video  flex justify-center  ">
-        <label htmlFor="upload" className="z-20">
+      <div className="aspect-video flex justify-center">
+        <label htmlFor="upload">
           <img
             src={!imgUrl ? "/blogbanner.png" : imgUrl}
-            className="z-10 rounded-lg shadow hover:opacity-25"
+            className="rounded-lg shadow hover:opacity-25"
             alt="Image Banner w-full"
           />
           <input
@@ -95,9 +117,8 @@ function Create() {
             name="file"
             id="upload"
             hidden
-            accept=""
-            onChange={handleChange}
-            className=""
+            accept=".jpg , .jpeg"
+            onChange={(e)=>handleChange(e)}
           />
         </label>
       </div>
@@ -105,7 +126,7 @@ function Create() {
         type="text"
         placeholder="Enter the title"
         name="title"
-        className="outline-none shadow rounded border p-3 w-full max-sm:w-full "
+        className="outline-none shadow rounded border p-3 w-full max-sm:w-full"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
@@ -118,20 +139,15 @@ function Create() {
         onChange={(e) => setDesc(e.target.value)}
       />
       <QuillEditor
-        className="w-full relative  rounded-lg max-sm:w-full h-[500px]"
+        className="w-full relative rounded-lg max-sm:w-full h-[500px]"
         theme="snow"
         formats={formats}
         modules={modules}
         value={value}
         onChange={(value) => setValue(value)}
       />
-      <button
-        type="submit"
-        className=" top-[43px] relative bg-blue-700 hover:bg-blue-800 transition ease-in px-3 py-2 text-white font-meduim Capitalize rounded"
-      >
-        Submit
-      </button>
     </form>
+    </>
   );
 }
 

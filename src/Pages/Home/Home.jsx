@@ -7,10 +7,10 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/blogs/getallblogs`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/blogs/getallblogs`,
       );
       const data = await response.json();
-      setBlogs(data);
+      setBlogs(data.data);
     };
     fetchData();
   }, []);
@@ -38,8 +38,31 @@ function Home() {
         </div>
       </div>
       <RecentPosts posts={blogs} />
+      <h1 className="text-2xl font-medium px-12">All blogs posts</h1>
+      <AllBlogs posts={blogs} />
     </>
   );
 }
 
 export default Home;
+
+
+function AllBlogs({posts}){
+  return(
+    <div className="grid grid-cols-3 px-12 py-4">
+       {
+        (posts && posts.length > 0) && posts.map(item=>{
+         return <div>
+             <div>
+               <img src={item.img} alt="" />
+             </div>
+             <h1 className="text-3xl text-slate-700">
+              {item.title}
+             </h1>
+             <p className="text-xl text-slate-600 w-[300px] h-[33px] overflow-hidden text-ellipsis whitespace-nowrap">{item.desc}</p>
+          </div>
+        })
+       }
+    </div>
+  )
+}

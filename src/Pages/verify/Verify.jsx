@@ -7,14 +7,13 @@ function Verify() {
 
   useEffect(() => {
     const verify = async () => {
-      console.log(token);
       if (!token) {
         return;
       }
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/users/verify?token=${token}`,
       );
-      const {  success } = await res.json();
+      const { success } = await res.json();
       if (success) {
         navigate("/login");
       }

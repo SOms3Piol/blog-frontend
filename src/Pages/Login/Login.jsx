@@ -1,12 +1,22 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/useAuth";
+import { getToken } from "../../helpers/getToken";
 function Login() {
+  const navigate = useNavigate()
   const [error, setError] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
+
+  useEffect(()=>{
+    const token = getToken();
+    if(token){
+      navigate('/dashboard')
+    }
+  },[])
 
   const handleChange = (e) => {
     setData((prev) => ({
@@ -16,14 +26,19 @@ function Login() {
   };
 
   const { handleLogin } = useAuth();
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const value = await handleLogin(data);
     setError(value);
+    setData({
+      email:"",
+      password: ""
+    })
   };
   return (
     <div className="flex justify-center items-center w-full h-screen">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={(e)=>handleSubmit(e)}
         className="max-w-sm   mx-auto bg-white rounded  p-3 w-[750px]"
       >
         <div className=" text-4xl font-normal flex flex-col gap-3 ">

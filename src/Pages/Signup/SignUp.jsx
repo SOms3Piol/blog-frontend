@@ -33,8 +33,8 @@ function SignUp() {
       },
     );
     const unique = await res.json();
+    console.log(unique)
     if (unique.ok) {
-      console.log(unique);
       const value = await handleSignUp(data);
       setError(value);
     } else {
